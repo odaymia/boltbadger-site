@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
   :root {
+    color-scheme: light;
     /* fixed brand */
     --bolt: #2E74FF;
     --bolt-deep: #1657D6;
@@ -29,27 +30,6 @@
     --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
     --wrap: 1120px;
   }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #0C1015;
-      --surface: #151B23;
-      --surface-2: #10151c;
-      --ink: #E9ECF1;
-      --muted: #97A1AF;
-      --line: #232B35;
-      --accent: #5C93FF;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #0C1015;
-    --surface: #151B23;
-    --surface-2: #10151c;
-    --ink: #E9ECF1;
-    --muted: #97A1AF;
-    --line: #232B35;
-    --accent: #5C93FF;
-  }
-
   * { box-sizing: border-box; }
   body {
     margin: 0;
