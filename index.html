@@ -1,0 +1,532 @@
+<title>Bolt Badger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root {
+    /* fixed brand */
+    --bolt: #2E74FF;
+    --bolt-deep: #1657D6;
+    --asphalt: #13171E;
+    --asphalt-2: #1a212c;
+    --signal: #F5A623;
+    /* light theme tokens */
+    --bg: #F4F6F9;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1F5;
+    --ink: #111721;
+    --muted: #5A6473;
+    --line: #E3E7ED;
+    --accent: #1657D6;
+    /* hero (constant in both themes) */
+    --hero-ink: #F5F7FA;
+    --hero-muted: #97A2B2;
+    --hero-line: #2A323F;
+    --hero-card: #1b222d;
+
+    --f-display: "Saira", system-ui, sans-serif;
+    --f-body: "IBM Plex Sans", system-ui, sans-serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+    --wrap: 1120px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0C1015;
+      --surface: #151B23;
+      --surface-2: #10151c;
+      --ink: #E9ECF1;
+      --muted: #97A1AF;
+      --line: #232B35;
+      --accent: #5C93FF;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0C1015;
+    --surface: #151B23;
+    --surface-2: #10151c;
+    --ink: #E9ECF1;
+    --muted: #97A1AF;
+    --line: #232B35;
+    --accent: #5C93FF;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 17px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; letter-spacing: -0.02em; }
+  a { color: inherit; }
+  .wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 24px; }
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    font-weight: 500;
+    margin: 0;
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .topbar .wrap { display: flex; align-items: center; gap: 20px; height: 66px; }
+  .brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+  .mark { width: 40px; height: 40px; flex: none; object-fit: contain; }
+  .nav { margin-left: auto; display: flex; gap: 28px; align-items: center; }
+  .nav a { color: var(--muted); text-decoration: none; font-size: 0.93rem; font-weight: 500; transition: color .15s; }
+  .nav a:hover { color: var(--ink); }
+  .btn {
+    font-family: var(--f-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 8px;
+    padding: 11px 18px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: transform .08s ease, background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary { background: var(--bolt); color: #fff; }
+  .btn-primary:hover { background: var(--bolt-deep); }
+  .btn-ghost { background: var(--surface); color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover { border-color: var(--muted); }
+  .nav-cta { display: none; }
+  @media (min-width: 720px) { .nav-cta { display: inline-flex; } }
+
+  /* ---------- hero ---------- */
+  .hero { background: var(--bg); color: var(--ink); position: relative; overflow: hidden; }
+  .hero::before {
+    content: "";
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(58% 78% at 90% -12%, color-mix(in srgb, var(--bolt) 14%, transparent), transparent 60%),
+      repeating-linear-gradient(-45deg, rgba(245,166,35,0.05) 0 14px, transparent 14px 30px);
+    pointer-events: none;
+  }
+  .hero .wrap { position: relative; display: grid; grid-template-columns: 1fr; gap: 48px; padding-block: 70px 84px; }
+  @media (min-width: 940px) { .hero .wrap { grid-template-columns: 1.05fr 0.95fr; align-items: center; } }
+  .hero h1 { font-size: clamp(2.5rem, 6.2vw, 4.3rem); font-weight: 800; line-height: 1.02; margin: 18px 0 0; }
+  .hero h1 .lo { color: var(--muted); font-weight: 700; }
+  .hero p.lede { color: var(--muted); font-size: 1.18rem; line-height: 1.55; max-width: 34ch; margin: 22px 0 0; }
+  .hero .cta-row { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 34px; }
+  .hero .btn { padding: 13px 22px; font-size: 1rem; }
+  .status { display: inline-flex; align-items: center; gap: 9px; font-family: var(--f-mono); font-size: 0.74rem; letter-spacing: 0.13em; text-transform: uppercase; color: var(--hero-muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 4px rgba(245,166,35,0.18); }
+
+  /* sample work order card */
+  .ticket {
+    background: var(--hero-card);
+    border: 1px solid var(--hero-line);
+    border-radius: 16px;
+    box-shadow: 0 30px 60px -30px rgba(0,0,0,0.7);
+    overflow: hidden;
+    font-size: 0.9rem;
+  }
+  .ticket .tkhead { display: flex; align-items: center; gap: 12px; padding: 15px 18px; border-bottom: 1px solid var(--hero-line); background: rgba(255,255,255,0.02); }
+  .ticket .tklabel { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.16em; color: var(--hero-muted); text-transform: uppercase; }
+  .ticket .tkno { font-family: var(--f-mono); font-weight: 600; color: var(--hero-ink); }
+  .chip { margin-left: auto; font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.1em; padding: 4px 9px; border-radius: 999px; text-transform: uppercase; }
+  .chip.paid { background: rgba(46,196,120,0.16); color: #4fd695; border: 1px solid rgba(46,196,120,0.3); }
+  .ticket .veh { padding: 16px 18px 10px; }
+  .ticket .veh .vname { font-family: var(--f-display); font-weight: 700; font-size: 1.12rem; color: var(--hero-ink); }
+  .ticket .veh .vmeta { font-family: var(--f-mono); font-size: 0.76rem; color: var(--hero-muted); margin-top: 4px; letter-spacing: 0.02em; }
+  .rows { padding: 4px 18px 6px; }
+  .row { display: flex; align-items: center; gap: 12px; padding: 9px 0; border-top: 1px dashed var(--hero-line); }
+  .row:first-child { border-top: none; }
+  .code { font-family: var(--f-mono); font-weight: 600; font-size: 0.72rem; color: #fff; background: var(--bolt); border-radius: 5px; padding: 3px 7px; letter-spacing: 0.04em; flex: none; min-width: 42px; text-align: center; }
+  .row .svc { color: var(--hero-ink); }
+  .row .amt { margin-left: auto; font-family: var(--f-mono); color: var(--hero-muted); }
+  .crew { display: flex; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--hero-line); flex-wrap: wrap; }
+  .crew .who { font-family: var(--f-mono); font-size: 0.68rem; color: var(--hero-muted); background: rgba(255,255,255,0.04); border: 1px solid var(--hero-line); border-radius: 6px; padding: 4px 8px; }
+  .crew .who b { color: var(--hero-ink); font-weight: 600; }
+  .tktotal { display: flex; align-items: baseline; gap: 10px; padding: 13px 18px 16px; border-top: 1px solid var(--hero-line); }
+  .tktotal .tl { font-family: var(--f-mono); font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hero-muted); }
+  .tktotal .tv { margin-left: auto; font-family: var(--f-display); font-weight: 700; font-size: 1.5rem; color: var(--hero-ink); }
+  .sampletag { text-align: right; font-family: var(--f-mono); font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hero-muted); margin: 10px 4px 0; }
+
+  /* ---------- generic section ---------- */
+  section { padding-block: 74px; }
+  .sec-head { max-width: 62ch; }
+  .sec-head h2 { font-size: clamp(1.8rem, 3.6vw, 2.7rem); font-weight: 700; margin-top: 14px; line-height: 1.08; }
+  .sec-head p { color: var(--muted); font-size: 1.1rem; margin: 16px 0 0; }
+
+  /* strip: what it is */
+  .strip { background: var(--surface); border-block: 1px solid var(--line); }
+  .strip .wrap { padding-block: 30px; }
+  .strip p { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: clamp(1.25rem, 2.6vw, 1.7rem); line-height: 1.35; letter-spacing: -0.01em; text-wrap: balance; }
+  .strip .accent { color: var(--accent); }
+
+  /* feature grid */
+  .grid { display: grid; grid-template-columns: 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; margin-top: 42px; }
+  @media (min-width: 620px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 940px) { .grid { grid-template-columns: 1fr 1fr 1fr; } }
+  .cell { background: var(--surface); padding: 26px 24px 28px; display: flex; flex-direction: column; gap: 9px; }
+  .cell .k { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); }
+  .cell h3 { font-size: 1.16rem; font-weight: 600; letter-spacing: -0.01em; }
+  .cell p { margin: 0; color: var(--muted); font-size: 0.97rem; line-height: 1.55; }
+
+  /* product shots — a look inside */
+  .inside { background: var(--surface); border-block: 1px solid var(--line); }
+  .shots { display: grid; grid-template-columns: 1fr; gap: 24px; margin-top: 42px; }
+  @media (min-width: 760px) { .shots { grid-template-columns: 1fr 1fr 1fr; } }
+  .shot { margin: 0; display: flex; flex-direction: column; gap: 13px; }
+  .win { border: 1px solid var(--line); border-bottom: none; border-radius: 12px 12px 0 0; background: var(--surface-2); display: flex; align-items: center; gap: 10px; padding: 9px 14px; }
+  .win .dots { display: inline-flex; gap: 5px; }
+  .win .dots i { width: 9px; height: 9px; border-radius: 50%; background: var(--line); display: block; }
+  .win .wtitle { font-family: var(--f-mono); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .shot-body { border: 1px solid var(--line); border-radius: 0 0 12px 12px; background: var(--surface); padding: 16px 16px 18px; flex: 1; box-shadow: 0 20px 44px -30px rgba(20,24,31,0.4); }
+  .shot figcaption { color: var(--muted); font-size: 0.92rem; padding: 0 2px; }
+  .shot-title { font-family: var(--f-display); font-weight: 700; font-size: 1.02rem; margin: 0 0 12px; letter-spacing: -0.01em; }
+  .mini { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+  .mini th { text-align: left; font-family: var(--f-mono); font-size: 0.6rem; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); font-weight: 500; padding: 0 0 8px; border-bottom: 1px solid var(--line); }
+  .mini th.r, .mini td.r { text-align: right; }
+  .mini td { padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .mini tr:last-child td { border-bottom: none; }
+  .mini .num { font-family: var(--f-mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+  .mini .who { font-weight: 600; }
+  .mini .role { font-family: var(--f-mono); font-size: 0.66rem; color: var(--muted); }
+  .codes { font-family: var(--f-mono); font-weight: 600; font-size: 0.73rem; color: var(--accent); letter-spacing: 0.03em; }
+  .spec-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px dashed var(--line); }
+  .spec-row:last-child { border-bottom: none; }
+  .spec-row .lbl { font-family: var(--f-mono); font-size: 0.63rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); min-width: 66px; }
+  .spec-row .val { font-weight: 600; font-size: 0.9rem; }
+  .bolt-chip { margin-left: auto; font-family: var(--f-mono); font-size: 0.68rem; font-weight: 600; color: #fff; background: var(--bolt); border-radius: 5px; padding: 3px 8px; }
+  .rec { margin-top: 13px; padding: 10px 12px; border-radius: 8px; background: color-mix(in srgb, var(--bolt) 8%, var(--surface)); border: 1px solid color-mix(in srgb, var(--bolt) 22%, var(--line)); font-size: 0.84rem; line-height: 1.45; }
+  .rec b { color: var(--accent); }
+
+  /* differentiators */
+  .why { background: var(--surface-2); border-block: 1px solid var(--line); }
+  .why-grid { display: grid; grid-template-columns: 1fr; gap: 30px 40px; margin-top: 42px; }
+  @media (min-width: 700px) { .why-grid { grid-template-columns: 1fr 1fr; } }
+  .why-item { display: flex; gap: 16px; align-items: flex-start; }
+  .why-item .num { font-family: var(--f-mono); font-size: 0.8rem; color: var(--accent); font-weight: 600; padding-top: 4px; flex: none; }
+  .why-item h3 { font-size: 1.1rem; font-weight: 600; }
+  .why-item p { margin: 6px 0 0; color: var(--muted); font-size: 0.98rem; }
+
+  /* integrations */
+  .integ .wrap { position: relative; }
+  .integ-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 40px; }
+  @media (min-width: 640px) { .integ-grid { grid-template-columns: 1fr 1fr; } }
+  .partner { border: 1px solid var(--line); border-radius: 12px; padding: 22px 22px; background: var(--surface); display: flex; flex-direction: column; gap: 8px; }
+  .partner .ph { display: flex; align-items: center; gap: 12px; }
+  .partner .pname { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; }
+  .partner .pstat { margin-left: auto; font-family: var(--f-mono); font-size: 0.63rem; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+  .partner .pstat.live { color: #12945a; border-color: color-mix(in srgb, #12945a 40%, var(--line)); background: color-mix(in srgb, #12945a 8%, transparent); }
+  .partner .pstat.dev { color: var(--signal); border-color: color-mix(in srgb, var(--signal) 45%, var(--line)); background: color-mix(in srgb, var(--signal) 10%, transparent); }
+  .partner p { margin: 0; color: var(--muted); font-size: 0.94rem; }
+  .integ-note { font-family: var(--f-mono); font-size: 0.72rem; color: var(--muted); margin-top: 20px; letter-spacing: 0.02em; }
+
+  /* founder band */
+  .founder { background: var(--asphalt); color: var(--hero-ink); }
+  .founder .wrap { display: grid; grid-template-columns: 1fr; gap: 26px; padding-block: 78px; }
+  @media (min-width: 860px) { .founder .wrap { grid-template-columns: 0.9fr 1.1fr; gap: 60px; align-items: center; } }
+  .founder .eyebrow { color: var(--signal); }
+  .founder h2 { color: var(--hero-ink); font-size: clamp(1.8rem, 3.6vw, 2.7rem); font-weight: 700; margin-top: 14px; line-height: 1.1; }
+  .founder p { color: var(--hero-muted); font-size: 1.08rem; line-height: 1.65; }
+  .founder p + p { margin-top: 16px; }
+  .founder .sig { font-family: var(--f-mono); font-size: 0.8rem; letter-spacing: 0.04em; color: var(--hero-ink); margin-top: 22px; }
+  .founder .sig span { color: var(--hero-muted); }
+
+  /* cta */
+  .cta { text-align: center; }
+  .cta-logo { width: min(300px, 72vw); height: auto; margin: 0 auto 26px; display: block; }
+  .cta h2 { font-size: clamp(2rem, 4.4vw, 3rem); font-weight: 800; }
+  .cta p { color: var(--muted); font-size: 1.12rem; max-width: 46ch; margin: 16px auto 0; }
+  .cta .cta-row { display: flex; gap: 13px; justify-content: center; flex-wrap: wrap; margin-top: 30px; }
+  .cta .btn-primary { padding: 14px 26px; font-size: 1.04rem; }
+  .cta .btn-line { background: var(--surface); color: var(--ink); border-color: var(--line); }
+  .cta .btn-line:hover { border-color: var(--muted); }
+
+  /* footer */
+  footer { border-top: 1px solid var(--line); background: var(--surface); }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 28px; align-items: center; padding-block: 30px 40px; }
+  footer .brand { color: var(--ink); }
+  footer .foot-tag { font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.03em; }
+  footer .foot-meta { margin-left: auto; font-family: var(--f-mono); font-size: 0.74rem; color: var(--muted); letter-spacing: 0.03em; }
+
+  :focus-visible { outline: 2px solid var(--bolt); outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<!-- ============ TOP BAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img class="mark" src="boltbadger-mark.png" alt="">
+      Bolt Badger
+    </a>
+    <nav class="nav">
+      <a href="#what">What it does</a>
+      <a href="#inside">A look inside</a>
+      <a href="#shop">Our story</a>
+      <a class="btn btn-primary nav-cta" href="mailto:odaymia@gmail.com?subject=Bolt%20Badger%20—%20partner%20inquiry">Get in touch</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<main id="top">
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-copy">
+      <p class="eyebrow">Shop management OS</p>
+      <h1>You handle the cars.<br><span class="lo">We handle the chaos.</span></h1>
+      <p class="lede">Bolt Badger is the operating system for quick-lube and auto-service shops — work orders, inventory, invoicing, service history, and the customer, in one fast tool that keeps running when the internet doesn't.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="mailto:odaymia@gmail.com?subject=Bolt%20Badger%20—%20request%20a%20demo">Request a demo</a>
+        <a class="btn btn-ghost" href="#what">See what it does</a>
+      </div>
+      <div style="margin-top:30px"><span class="status"><span class="dot"></span>Now onboarding our first shops</span></div>
+    </div>
+
+    <div class="hero-vis">
+      <div class="ticket" role="img" aria-label="Sample Bolt Badger work order for a 2019 Honda Accord">
+        <div class="tkhead">
+          <span class="tklabel">Work order</span>
+          <span class="tkno">#4487</span>
+          <span class="chip paid">Invoiced · Paid</span>
+        </div>
+        <div class="veh">
+          <div class="vname">2019 Honda Accord · 1.5L</div>
+          <div class="vmeta">VIN 1HGCV1F30KA••••• &nbsp;·&nbsp; 61,204 mi &nbsp;·&nbsp; 8ABC123</div>
+        </div>
+        <div class="rows">
+          <div class="row"><span class="code">OIL</span><span class="svc">Full Synthetic Oil Change · 0W-20</span><span class="amt">$99.99</span></div>
+          <div class="row"><span class="code">AF</span><span class="svc">Engine Air Filter</span><span class="amt">$44.99</span></div>
+          <div class="row"><span class="code">ATF</span><span class="svc">Transmission Fluid Service</span><span class="amt">$149.99</span></div>
+        </div>
+        <div class="crew">
+          <span class="who">Advisor <b>S. Rivera</b></span>
+          <span class="who">Top <b>M. Chen</b></span>
+          <span class="who">Pit <b>L. Brooks</b></span>
+        </div>
+        <div class="tktotal">
+          <span class="tl">Total</span>
+          <span class="tv">$318.44</span>
+        </div>
+      </div>
+      <p class="sampletag">Sample work order</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHAT IT IS STRIP ============ -->
+<div class="strip">
+  <div class="wrap">
+    <p>One counter. One tablet. One tool that runs the whole visit — from the moment the car pulls into the bay to the receipt on the customer's phone. <span class="accent">Built for shops that move fast.</span></p>
+  </div>
+</div>
+
+<!-- ============ FEATURES ============ -->
+<section id="what">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">What it does</p>
+      <h2>Everything the front counter needs, and nothing it doesn't.</h2>
+      <p>Bolt Badger replaces the tangle of paper tickets, spreadsheets, and dated POS software with one system built around how a service bay actually runs.</p>
+    </div>
+    <div class="grid">
+      <div class="cell">
+        <span class="k">Tickets</span>
+        <h3>Work orders &amp; invoicing</h3>
+        <p>Estimate to repair order to invoice on one number. Itemized, plain-language, and California BAR-compliant out of the box.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Customers</span>
+        <h3>Customers &amp; vehicles</h3>
+        <p>Plate-to-VIN decode, full service history per car, and short service codes that show what was done last visit at a glance.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Specs</span>
+        <h3>Automatic fluid specs</h3>
+        <p>Enter the car and the right oil grade, capacity, filter, and gear-oil and coolant specs come up on their own — no manual lookup.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Inventory</span>
+        <h3>Parts &amp; smart reorder</h3>
+        <p>A full parts catalog with sell-through reporting and a reorder planner that tells you what to buy before you run out.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Tires</span>
+        <h3>Sell tires from the bay</h3>
+        <p>Search your distributor's live stock and drop a tire straight onto the ticket at the right price.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Sign-off</span>
+        <h3>Signature pad &amp; kiosk</h3>
+        <p>Customers approve and sign on a locked tablet, then scan a QR to pull up every receipt in their portal.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Portal</span>
+        <h3>Customer portal</h3>
+        <p>Every invoice and service record, on the customer's phone — the loyalty hook that brings them back.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Reports</span>
+        <h3>Reports &amp; commissions</h3>
+        <p>Sales, profit, and per-tech commission payouts — split across the advisor, the top tech, and the pit — done for you.</p>
+      </div>
+      <div class="cell">
+        <span class="k">Reliability</span>
+        <h3>Offline-first, cloud-synced</h3>
+        <p>Keeps working with no internet and syncs every device the moment it's back. The counter never stops.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ A LOOK INSIDE ============ -->
+<section id="inside" class="inside">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">A look inside</p>
+      <h2>The whole shop floor, on one screen.</h2>
+      <p>A few of the tools your team taps through on a busy Saturday — every screen fast, clear, and built for greasy hands.</p>
+    </div>
+    <div class="shots">
+      <figure class="shot">
+        <div class="win"><span class="dots"><i></i><i></i><i></i></span><span class="wtitle">Service history</span></div>
+        <div class="shot-body">
+          <p class="shot-title">2019 Honda Accord · 1.5L</p>
+          <table class="mini">
+            <thead><tr><th>Date</th><th class="r">Miles</th><th>Service</th></tr></thead>
+            <tbody>
+              <tr><td class="num">07/15/26</td><td class="r num">60,100</td><td class="codes">OIL, ATF, RAD</td></tr>
+              <tr><td class="num">02/15/26</td><td class="r num">51,500</td><td class="codes">OIL, AF</td></tr>
+              <tr><td class="num">08/09/25</td><td class="r num">42,000</td><td class="codes">OIL</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>Every car's full history at a glance, in plain service codes.</figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="win"><span class="dots"><i></i><i></i><i></i></span><span class="wtitle">Commissions</span></div>
+        <div class="shot-body">
+          <p class="shot-title">This month · $1,036 paid</p>
+          <table class="mini">
+            <thead><tr><th>Tech</th><th>Role</th><th class="r">Earned</th></tr></thead>
+            <tbody>
+              <tr><td class="who">Sam Rivera</td><td class="role">Advisor</td><td class="r num">$412.50</td></tr>
+              <tr><td class="who">Mia Chen</td><td class="role">Top tech</td><td class="r num">$318.00</td></tr>
+              <tr><td class="who">Leo Brooks</td><td class="role">Pit tech</td><td class="r num">$305.50</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figcaption>Commission split across the advisor, top, and pit — payout-ready.</figcaption>
+      </figure>
+
+      <figure class="shot">
+        <div class="win"><span class="dots"><i></i><i></i><i></i></span><span class="wtitle">Service specs</span></div>
+        <div class="shot-body">
+          <p class="shot-title">2027 Genesis G90 · 3.5T</p>
+          <div class="spec-row"><span class="lbl">Oil</span><span class="val">Full Synthetic</span><span class="bolt-chip">5W-30</span></div>
+          <div class="spec-row"><span class="lbl">Capacity</span><span class="val">6.9 quarts</span></div>
+          <div class="spec-row"><span class="lbl">Filter</span><span class="val">Valvoline VO-81</span></div>
+          <div class="rec">Recommended: <b>Valvoline Full Synthetic 5W-30</b> — the oil that meets this engine's spec.</div>
+        </div>
+        <figcaption>Enter the car and the right oil, capacity, and filter come up on their own.</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ============ WHY ============ -->
+<div class="why">
+  <div class="wrap" style="padding-block:74px">
+    <div class="sec-head">
+      <p class="eyebrow">Why it's different</p>
+      <h2>Software that was built in a bay, not a boardroom.</h2>
+    </div>
+    <div class="why-grid">
+      <div class="why-item">
+        <span class="num">01</span>
+        <div>
+          <h3>Runs with no internet</h3>
+          <p>Every device keeps a full local copy and reads from it first. A dropped connection never stops a sale or loses a ticket.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="num">02</span>
+        <div>
+          <h3>California-compliant invoicing</h3>
+          <p>Built to the Bureau of Automotive Repair rules — every part and service itemized, described, and marked new or used.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="num">03</span>
+        <div>
+          <h3>Your data, backed up, no lock-in</h3>
+          <p>Records live in the cloud with real backups and export any time. It's your shop's data, and it stays that way.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <span class="num">04</span>
+        <div>
+          <h3>Multi-shop from day one</h3>
+          <p>Every setting is configurable and nothing is hardcoded, so the platform scales from one bay to a whole group.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOUNDER ============ -->
+<section id="shop" class="founder">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Our story</p>
+      <h2>We got tired of the tools, so we built our own.</h2>
+    </div>
+    <div>
+      <p>Bolt Badger wasn't dreamed up in a boardroom. It was built inside a working service shop in San Diego, because nothing on the market fit how a busy lube-and-service bay actually runs — and the old systems were slow, clunky, and always trying to lock the data away.</p>
+      <p>Every feature earned its place on a real counter, on a real busy Saturday, with real customers waiting. That's the difference: this is shop software written by the people standing behind the counter, not for them.</p>
+      <p class="sig">Now we're opening it up to other shops. <span>— The Bolt Badger team, San Diego, CA</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<section class="cta">
+  <div class="wrap">
+    <img class="cta-logo" src="boltbadger-logo.png" alt="Bolt Badger — You handle the cars. We handle the chaos.">
+    <p class="eyebrow" style="text-align:center">Get in touch</p>
+    <h2>Let's talk.</h2>
+    <p>Whether you're a shop that wants to see it or a partner that wants to integrate, we'd love to hear from you.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="mailto:odaymia@gmail.com?subject=Bolt%20Badger%20—%20request%20a%20demo">Request a demo</a>
+      <a class="btn btn-line" href="mailto:odaymia@gmail.com?subject=Bolt%20Badger%20—%20partner%20inquiry">Partner with us</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top">
+      <img class="mark" src="boltbadger-mark.png" alt="">
+      Bolt Badger
+    </a>
+    <span class="foot-tag">You handle the cars. We handle the chaos.</span>
+    <span class="foot-meta">Shop management software · San Diego, California · © 2026</span>
+  </div>
+</footer>
